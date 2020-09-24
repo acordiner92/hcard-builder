@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import React from 'react';
 import ReactDomServer from 'react-dom/server';
+import { SavePartialProfile } from './ProfileService';
+import { PartialProfile } from './Profile';
 
 // eslint-disable-next-line functional/prefer-type-literal
 interface Global {
@@ -54,7 +56,13 @@ export const submit = (request: Request, response: Response): Response => {
   return response.send('submit');
 };
 
-export const update = (request: Request, response: Response): Response => {
-  console.log('update');
-  return response.send('update');
+export const update = (savePartialProfile: SavePartialProfile) => async (
+  request: Request,
+  response: Response,
+): Promise<Response> => {
+  const accountId = '2ab748b8-5b3c-4184-acb4-cb3550b8c6de';
+  const partialProfile = request.body as PartialProfile;
+
+  await savePartialProfile(accountId, partialProfile);
+  return response.send();
 };

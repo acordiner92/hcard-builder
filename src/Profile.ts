@@ -24,3 +24,16 @@ export type Profile = {
   readonly postcode: string;
   readonly country: string;
 };
+
+export type PartialProfile = {
+  readonly givenName?: string;
+  readonly surname?: string;
+  readonly email?: string;
+  readonly phone?: string;
+  readonly houseNumber?: number;
+  readonly street?: string;
+  readonly suburb?: string;
+  readonly state?: AustralianState;
+  readonly postcode?: string;
+  readonly country?: string;
+};

@@ -1,5 +1,6 @@
-import { Profile } from './Profile';
+import { Profile, PartialProfile } from './Profile';
 import { IDatabase } from 'pg-promise';
+import { RedisClient } from 'redis';
 
 export const getByAccountId = (client: IDatabase<unknown>) => (
   accountId: string,
@@ -12,6 +13,41 @@ export const getByAccountId = (client: IDatabase<unknown>) => (
   `,
     [accountId],
   );
+
+export const getPartialByAccountId = (redisClient: RedisClient) => (
+  accountId: string,
+): Promise<PartialProfile | null> =>
+  new Promise((resolve, reject) => {
+    redisClient.get(accountId, (error, value) => {
+      if (error) {
+        return reject(error);
+      } else {
+        return resolve(value ? (JSON.parse(value) as PartialProfile) : null);
+      }
+    });
+  });
+export type GetPartialByAccountId = (
+  accountId: string,
+) => Promise<PartialProfile | null>;
+
+export const savePartial = (redisClient: RedisClient) => (
+  accountId: string,
+  partialProfile: PartialProfile,
+): Promise<void> =>
+  new Promise((resolve, reject) => {
+    redisClient.set(accountId, JSON.stringify(partialProfile), error => {
+      if (error) {
+        return reject(error);
+      } else {
+        return resolve();
+      }
+    });
+  });
+
+export type SavePartial = (
+  accountId: string,
+  partialProfile: PartialProfile,
+) => Promise<void>;
 
 export const create = (client: IDatabase<unknown>) => (
   profile: Profile,
