@@ -19,7 +19,7 @@ const readRootTemplate = (): Promise<string> =>
     });
   });
 
-export const render = async (
+export const serverSideRender = async (
   partialProfile: PartialProfile | null,
 ): Promise<string> => {
   const template = require('../view/main').default;
@@ -34,3 +34,5 @@ export const render = async (
   );
   return view;
 };
+
+export const renderSPA = (): Promise<string> => readRootTemplate();

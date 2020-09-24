@@ -13,6 +13,7 @@ export const getByAccountId = (client: IDatabase<unknown>) => (
   `,
     [accountId],
   );
+export type GetByAccountId = (accountId: string) => Promise<Profile | null>;
 
 export const getPartialByAccountId = (redisClient: RedisClient) => (
   accountId: string,

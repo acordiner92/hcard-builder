@@ -3,6 +3,7 @@ import {
   SavePartial,
   GetPartialByAccountId,
   Create,
+  GetByAccountId,
 } from './ProfileRepository';
 import { v4 as uuid } from 'uuid';
 
@@ -42,3 +43,8 @@ export const createProfile = (create: Create) => (
 ): Promise<Profile> => create({ ...profile, id: uuid() });
 
 export type CreateProfile = (profile: Profile) => Promise<Profile>;
+
+export const getProfile = (getByAccountId: GetByAccountId) => (
+  accountId: string,
+): Promise<Profile | null> => getByAccountId(accountId);
+export type GetProfile = (accountId: string) => Promise<Profile | null>;

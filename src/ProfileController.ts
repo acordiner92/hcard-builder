@@ -6,9 +6,10 @@ import {
   SavePartialProfile,
   GetPartialProfile,
   CreateProfile,
+  GetProfile,
 } from './ProfileService';
 import { PartialProfile, Profile } from './Profile';
-import { render } from './ProfileView';
+import { renderSPA, serverSideRender } from './ProfileView';
 
 // eslint-disable-next-line functional/prefer-type-literal
 interface Global {
@@ -20,24 +21,35 @@ declare var global: Global;
 global.React = React;
 
 export const getView = (getPartialProfile: GetPartialProfile) => async (
-  _request: Request,
+  request: Request,
   response: Response,
 ): Promise<Response> => {
-  const partialProfile = await getPartialProfile(
-    '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
-  );
-  const view = await render(partialProfile);
-  return response.send(view);
+  const shouldSsr = true;
+  if (shouldSsr) {
+    const partialProfile = await getPartialProfile(
+      '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
+    );
+    const view = await serverSideRender(partialProfile);
+    return response.send(view);
+  } else {
+    const spa = await renderSPA();
+    return response.send(spa);
+  }
 };
 
-export const get = (getPartialProfile: GetPartialProfile) => async (
-  _request: Request,
-  response: Response,
-): Promise<Response> => {
-  const partialProfile = await getPartialProfile(
-    '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
-  );
-  return response.send(partialProfile);
+export const get = (
+  getPartialProfile: GetPartialProfile,
+  getProfile: GetProfile,
+) => async (_request: Request, response: Response): Promise<Response> => {
+  const profile = await getProfile('2ab748b8-5b3c-4184-acb4-cb3550b8c6de');
+  if (profile) {
+    return response.send(profile);
+  } else {
+    const partialProfile = await getPartialProfile(
+      '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
+    );
+    return response.send(partialProfile);
+  }
 };
 
 export const submit = (createProfile: CreateProfile) => async (

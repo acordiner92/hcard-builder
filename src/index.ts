@@ -4,10 +4,15 @@ import { get, getView, submit, update } from './ProfileController';
 import redis from 'redis';
 import {
   create,
+  getByAccountId,
   getPartialByAccountId,
   savePartial,
 } from './ProfileRepository';
-import { createProfile, savePartialProfile } from './ProfileService';
+import {
+  createProfile,
+  getProfile,
+  savePartialProfile,
+} from './ProfileService';
 import { getConnection } from './DbConnection';
 
 const app = express();
@@ -29,13 +34,14 @@ router.use(express.static(path.resolve(__dirname, '..', 'view')));
 
 // Setup dependencies via partial application
 const createProfileFn = createProfile(create(dbConnection.client));
+const getProfileFn = getProfile(getByAccountId(dbConnection.client));
 
 const savePartialProfileFn = savePartialProfile(
   getPartialByAccountId(client),
   savePartial(client),
 );
 
-router.get('/profile', get(getPartialByAccountId(client)));
+router.get('/profile', get(getPartialByAccountId(client), getProfileFn));
 router.post('/submit', submit(createProfileFn));
 router.post('/update', update(savePartialProfileFn));
 
