@@ -27,12 +27,12 @@ You can see how it executes by loading up the `index.html` file in your browser.
 
 Build a node server which;
 
-* Serves up the SPA
-* Server renders the SPA to support non-JS clients
-* Saves user inputed data to the server as they switch between form fields
-* Saves completed form data on user submission
-* On page reload, populates the form fields with the values previous saved
-* Is stateless, to support auto-scaling
+- Serves up the SPA
+- Server renders the SPA to support non-JS clients
+- Saves user inputed data to the server as they switch between form fields
+- Saves completed form data on user submission
+- On page reload, populates the form fields with the values previous saved
+- Is stateless, to support auto-scaling
 
 User data should be saved into a store or database
 that could in the future be accessed by any number of running servers.
@@ -67,11 +67,11 @@ suburb=Pyrmont
 
 #### Notes
 
-* Using the latest "current" version of node is fine.
-* The SPA will automatically trigger the POSTs as the user interacts with the
+- Using the latest "current" version of node is fine.
+- The SPA will automatically trigger the POSTs as the user interacts with the
   form,
   you do not have to add these yourself.
-* To render our React component on the server, you will need to set `React` on
+- To render our React component on the server, you will need to set `React` on
   the `global` variable before requiring the component bundle:
   ```javascript
   var React = require('react');
@@ -84,18 +84,18 @@ console.log(rendered);
 
 ### Guidelines
 
-* We are interested in your coding style and how you solve problems.
+- We are interested in your coding style and how you solve problems.
   To this end,
   please include your source code and any build steps / explanations we may
   need to test the submission
-* Please make sure your code is executable,
+- Please make sure your code is executable,
   and all dependencies are included
-* Please structure the code for reusability
-* Feel free to use any frameworks, preprocessors, or tools you are familiar with
+- Please structure the code for reusability
+- Feel free to use any frameworks, preprocessors, or tools you are familiar with
 
 ### Submission
 
-Please submit a *complete* copy of the source code you wrote for this test.
+Please submit a _complete_ copy of the source code you wrote for this test.
 
 Upon submission, please also give us a guide to how long you spent on the test
 (There is no wrong answer! We iterate on this test based on the average time

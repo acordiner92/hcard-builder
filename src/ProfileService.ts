@@ -1,29 +1,25 @@
 import { PartialProfile, Profile } from './Profile';
 import {
   SavePartial,
-  GetPartialByAccountId,
+  GetPartialByUserId,
   Create,
-  GetByAccountId,
+  GetByUserId,
 } from './ProfileRepository';
 import { v4 as uuid } from 'uuid';
 
-export const getPartialProfile = (
-  getPartialByAccountId: GetPartialByAccountId,
-) => (accountId: string): Promise<PartialProfile | null> =>
-  getPartialByAccountId(accountId);
+export const getPartialProfile = (getPartialByUserId: GetPartialByUserId) => (
+  userId: string,
+): Promise<PartialProfile | null> => getPartialByUserId(userId);
 
 export type GetPartialProfile = (
-  accountId: string,
+  userId: string,
 ) => Promise<PartialProfile | null>;
 
 export const savePartialProfile = (
-  getPartialByAccountId: GetPartialByAccountId,
+  getPartialByUserId: GetPartialByUserId,
   savePartial: SavePartial,
-) => async (
-  accountId: string,
-  partialProfile: PartialProfile,
-): Promise<void> => {
-  const existingPartialProfile = await getPartialByAccountId(accountId);
+) => async (userId: string, partialProfile: PartialProfile): Promise<void> => {
+  const existingPartialProfile = await getPartialByUserId(userId);
   const updatedPartialProfile = existingPartialProfile
     ? {
         ...existingPartialProfile,
@@ -31,10 +27,10 @@ export const savePartialProfile = (
       }
     : partialProfile;
 
-  await savePartial(accountId, updatedPartialProfile);
+  await savePartial(userId, updatedPartialProfile);
 };
 export type SavePartialProfile = (
-  accountId: string,
+  userId: string,
   partialProfile: PartialProfile,
 ) => Promise<void>;
 
@@ -44,7 +40,7 @@ export const createProfile = (create: Create) => (
 
 export type CreateProfile = (profile: Profile) => Promise<Profile>;
 
-export const getProfile = (getByAccountId: GetByAccountId) => (
-  accountId: string,
-): Promise<Profile | null> => getByAccountId(accountId);
-export type GetProfile = (accountId: string) => Promise<Profile | null>;
+export const getProfile = (getByUserId: GetByUserId) => (
+  userId: string,
+): Promise<Profile | null> => getByUserId(userId);
+export type GetProfile = (userId: string) => Promise<Profile | null>;

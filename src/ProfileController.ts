@@ -30,7 +30,7 @@ export const submit = (createProfile: CreateProfile) => async (
   const profile = request.body as Profile;
   const createdProfile = await createProfile({
     ...profile,
-    accountId: '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
+    userId: '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
   });
   return response.send(createdProfile);
 };
@@ -39,9 +39,9 @@ export const update = (savePartialProfile: SavePartialProfile) => async (
   request: Request,
   response: Response,
 ): Promise<Response> => {
-  const accountId = '2ab748b8-5b3c-4184-acb4-cb3550b8c6de';
+  const userId = '2ab748b8-5b3c-4184-acb4-cb3550b8c6de';
   const partialProfile = request.body as PartialProfile;
 
-  await savePartialProfile(accountId, partialProfile);
+  await savePartialProfile(userId, partialProfile);
   return response.status(204).send();
 };

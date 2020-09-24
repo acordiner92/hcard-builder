@@ -2,24 +2,24 @@ import { Profile, PartialProfile } from './Profile';
 import { IDatabase } from 'pg-promise';
 import { RedisClient } from 'redis';
 
-export const getByAccountId = (client: IDatabase<unknown>) => (
-  accountId: string,
+export const getByUserId = (client: IDatabase<unknown>) => (
+  userId: string,
 ): Promise<Profile | null> =>
   client.oneOrNone<Profile>(
     `
-    SELECT id, account_id, given_name, surname, email, phone, house_number, street, suburb, state, postcode, country
+    SELECT id, user_id, given_name, surname, email, phone, house_number, street, suburb, state, postcode, country
     FROM profile
-    WHERE account_id=$1
+    WHERE user_id=$1
   `,
-    [accountId],
+    [userId],
   );
-export type GetByAccountId = (accountId: string) => Promise<Profile | null>;
+export type GetByUserId = (userId: string) => Promise<Profile | null>;
 
-export const getPartialByAccountId = (redisClient: RedisClient) => (
-  accountId: string,
+export const getPartialByUserId = (redisClient: RedisClient) => (
+  userId: string,
 ): Promise<PartialProfile | null> =>
   new Promise((resolve, reject) => {
-    redisClient.get(accountId, (error, value) => {
+    redisClient.get(userId, (error, value) => {
       if (error) {
         return reject(error);
       } else {
@@ -27,16 +27,16 @@ export const getPartialByAccountId = (redisClient: RedisClient) => (
       }
     });
   });
-export type GetPartialByAccountId = (
-  accountId: string,
+export type GetPartialByUserId = (
+  userId: string,
 ) => Promise<PartialProfile | null>;
 
 export const savePartial = (redisClient: RedisClient) => (
-  accountId: string,
+  userId: string,
   partialProfile: PartialProfile,
 ): Promise<void> =>
   new Promise((resolve, reject) => {
-    redisClient.set(accountId, JSON.stringify(partialProfile), error => {
+    redisClient.set(userId, JSON.stringify(partialProfile), error => {
       if (error) {
         return reject(error);
       } else {
@@ -46,7 +46,7 @@ export const savePartial = (redisClient: RedisClient) => (
   });
 
 export type SavePartial = (
-  accountId: string,
+  userId: string,
   partialProfile: PartialProfile,
 ) => Promise<void>;
 
@@ -56,13 +56,13 @@ export const create = (client: IDatabase<unknown>) => (
   client.one<Profile>(
     `
               INSERT INTO profile
-              (id, account_id, given_name, surname, email, phone, house_number, street, suburb, state, postcode, country)
+              (id, user_id, given_name, surname, email, phone, house_number, street, suburb, state, postcode, country)
               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-              RETURNING id, account_id, given_name, surname, email, phone, house_number, street, suburb, state, postcode, country
+              RETURNING id, user_id, given_name, surname, email, phone, house_number, street, suburb, state, postcode, country
         `,
     [
       profile.id,
-      profile.accountId,
+      profile.userId,
       profile.givenName,
       profile.surname,
       profile.email,
