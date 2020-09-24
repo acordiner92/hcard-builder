@@ -12,6 +12,7 @@ export type AustralianState = typeof AustralianState[keyof typeof AustralianStat
 
 export type Profile = {
   readonly id: string;
+  readonly accountId: string;
   readonly givenName: string;
   readonly surname: string;
   readonly email: string;

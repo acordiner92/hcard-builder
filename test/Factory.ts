@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 export const createProfile = (): Readonly<Profile> => ({
   id: uuid(),
+  accountId: uuid(),
   givenName: 'Sam',
   surname: 'Fairfax',
   email: 'sam.fairfax@fairfaxmedia.com.au',

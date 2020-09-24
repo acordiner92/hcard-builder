@@ -1,5 +1,6 @@
 CREATE TABLE PROFILE(
    id UUID PRIMARY KEY,
+   account_id UUID NOT NULL,
    given_name TEXT NOT NULL,
    surname TEXT NOT NULL,
    email TEXT NOT NULL,

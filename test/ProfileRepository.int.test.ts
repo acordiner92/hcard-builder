@@ -1,6 +1,7 @@
-import { create } from '../src/ProfileRepository';
+import { create, getByAccountId } from '../src/ProfileRepository';
 import { createProfile } from './Factory';
 import { getDatabase } from './IntegrationSetup';
+import { v4 as uuid } from 'uuid';
 
 describe('RateRepository', () => {
   const { client, connection } = getDatabase();
@@ -19,6 +20,21 @@ describe('RateRepository', () => {
       const createdProfile = await create(client)(profile);
 
       expect(createdProfile).toStrictEqual(profile);
+    });
+  });
+
+  describe('getByUserId', () => {
+    test('profile is return if found', async () => {
+      const profile = createProfile();
+      await create(client)(profile);
+
+      const matchedProfile = await getByAccountId(client)(profile.accountId);
+      expect(matchedProfile).toStrictEqual(profile);
+    });
+
+    test('null is returned if not found', async () => {
+      const matchedProfile = await getByAccountId(client)(uuid());
+      expect(matchedProfile).toBeNull();
     });
   });
 });
