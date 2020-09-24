@@ -19,7 +19,11 @@ export const get = (
     const partialProfile = await getPartialProfile(
       '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
     );
-    return response.send(partialProfile);
+    if (partialProfile) {
+      return response.send(partialProfile);
+    } else {
+      return response.status(404).send();
+    }
   }
 };
 
