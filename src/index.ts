@@ -1,26 +1,42 @@
 import express from 'express';
 import path from 'path';
-import { get, submit, update } from './ProfileController';
+import { get, getView, submit, update } from './ProfileController';
 import redis from 'redis';
-import { getPartialByAccountId, savePartial } from './ProfileRepository';
-import { savePartialProfile } from './ProfileService';
+import {
+  create,
+  getPartialByAccountId,
+  savePartial,
+} from './ProfileRepository';
+import { createProfile, savePartialProfile } from './ProfileService';
+import { getConnection } from './DbConnection';
 
 const app = express();
 const router = express.Router();
 const port = 8080;
 const client = redis.createClient();
+const dbConnection = getConnection({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'profile_db_test',
+  password: 'postgres',
+  port: 5432,
+});
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
+router.get('^/$', getView(getPartialByAccountId(client)));
+
 router.use(express.static(path.resolve(__dirname, '..', 'view')));
 
 // Setup dependencies via partial application
+const createProfileFn = createProfile(create(dbConnection.client));
+
 const savePartialProfileFn = savePartialProfile(
   getPartialByAccountId(client),
   savePartial(client),
 );
 
-router.get('/', get);
-router.post('/submit', submit);
+router.get('/profile', get(getPartialByAccountId(client)));
+router.post('/submit', submit(createProfileFn));
 router.post('/update', update(savePartialProfileFn));
 
 app.use(router);

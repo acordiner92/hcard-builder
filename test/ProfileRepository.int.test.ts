@@ -38,23 +38,4 @@ describe('RateRepository', () => {
       expect(matchedProfile).toBeNull();
     });
   });
-
-  describe('update', () => {
-    test('profile is updated', async () => {
-      const profile = createProfile();
-      await create(client)(profile);
-
-      const profileToUpdate = {
-        ...profile,
-        state: AustralianState.act,
-      };
-
-      await update(client)(profileToUpdate);
-      const updatedProfile = await getByAccountId(client)(
-        profileToUpdate.accountId,
-      );
-
-      expect(updatedProfile?.state).toStrictEqual(profileToUpdate.state);
-    });
-  });
 });

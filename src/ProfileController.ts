@@ -1,11 +1,14 @@
 /* eslint-disable no-var */
 import { Request, Response } from 'express';
-import fs from 'fs';
-import path from 'path';
+
 import React from 'react';
-import ReactDomServer from 'react-dom/server';
-import { SavePartialProfile } from './ProfileService';
-import { PartialProfile } from './Profile';
+import {
+  SavePartialProfile,
+  GetPartialProfile,
+  CreateProfile,
+} from './ProfileService';
+import { PartialProfile, Profile } from './Profile';
+import { render } from './ProfileView';
 
 // eslint-disable-next-line functional/prefer-type-literal
 interface Global {
@@ -16,44 +19,37 @@ declare var global: Global;
 // eslint-disable-next-line functional/immutable-data
 global.React = React;
 
-export const get = (request: Request, response: Response): any => {
-  const hCardComponent = require('../view/main.js').default;
-  const hCardApp = ReactDomServer.renderToString(
-    React.createElement(hCardComponent, {
-      givenName: 'Sam',
-      surname: 'Fairfax',
-      email: 'sam.fairfax@fairfaxmedia.com.au',
-      phone: '0292822833',
-      houseNumber: '100',
-      street: 'Harris Street',
-      suburb: 'Pyrmont',
-      state: 'NSW',
-      postcode: '2009',
-      country: 'Australia',
-    }),
+export const getView = (getPartialProfile: GetPartialProfile) => async (
+  _request: Request,
+  response: Response,
+): Promise<Response> => {
+  const partialProfile = await getPartialProfile(
+    '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
   );
-  fs.readFile(
-    path.resolve(__dirname, '..', 'view/index.html'),
-    'utf-8',
-    (error, data) => {
-      if (error) {
-        console.log(error);
-        return response.status(500).send('error has occured');
-      } else {
-        return response.send(
-          data.replace(
-            '<div class="HcardApp" />',
-            `<div class="HcardApp">${hCardApp}</div>`,
-          ),
-        );
-      }
-    },
-  );
+  const view = await render(partialProfile);
+  return response.send(view);
 };
 
-export const submit = (request: Request, response: Response): Response => {
-  console.log('submit');
-  return response.send('submit');
+export const get = (getPartialProfile: GetPartialProfile) => async (
+  _request: Request,
+  response: Response,
+): Promise<Response> => {
+  const partialProfile = await getPartialProfile(
+    '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
+  );
+  return response.send(partialProfile);
+};
+
+export const submit = (createProfile: CreateProfile) => async (
+  request: Request,
+  response: Response,
+): Promise<Response> => {
+  const profile = request.body as Profile;
+  const createdProfile = await createProfile({
+    ...profile,
+    accountId: '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
+  });
+  return response.send(createdProfile);
 };
 
 export const update = (savePartialProfile: SavePartialProfile) => async (
@@ -64,5 +60,5 @@ export const update = (savePartialProfile: SavePartialProfile) => async (
   const partialProfile = request.body as PartialProfile;
 
   await savePartialProfile(accountId, partialProfile);
-  return response.send();
+  return response.status(204).send();
 };
