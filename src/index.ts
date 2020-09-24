@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { get, submit, update } from './ProfileController';
 import { getView } from './ProfileViewController';
 import redis from 'redis';
@@ -16,6 +17,7 @@ import {
 } from './ProfileService';
 import { getConnection } from './DbConnection';
 import React from 'react';
+import { renderSpa, renderSsr } from './ProfileViewRenderer';
 
 const app = express();
 const router = express.Router();
@@ -40,7 +42,15 @@ const savePartialProfileFn = savePartialProfile(
   savePartial(client),
 );
 
-router.get('^/$', getView(getPartialByUserId(client), getProfileFn));
+router.get(
+  '^/$',
+  getView(
+    getPartialByUserId(client),
+    getProfileFn,
+    renderSsr(fs.readFile),
+    renderSpa(fs.readFile),
+  ),
+);
 router.use(express.static(path.resolve(__dirname, '..', 'view')));
 
 router.get('/profile', get(getPartialByUserId(client), getProfileFn));
