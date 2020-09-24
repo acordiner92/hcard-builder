@@ -4,7 +4,6 @@ import fs from 'fs';
 import React from 'react';
 import ReactDomServer from 'react-dom/server';
 import { PartialProfile } from './Profile';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 
 const rootTemplatePath = path.resolve(__dirname, '..', 'view/index.html');
 
@@ -19,14 +18,15 @@ const readRootTemplate = (): Promise<string> =>
     });
   });
 
-export const serverSideRender = async (
-  partialProfile: PartialProfile | null,
+export const renderSsr = async (
+  profileProps: PartialProfile | null,
 ): Promise<string> => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const template = require('../view/main').default;
 
   const rootTemplate = await readRootTemplate();
   const componentTemplate = ReactDomServer.renderToString(
-    React.createElement(template, partialProfile ?? {}),
+    React.createElement(template, profileProps),
   );
   const view = rootTemplate.replace(
     '<div class="HcardApp" />',

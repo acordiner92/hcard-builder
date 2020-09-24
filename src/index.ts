@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
-import { get, getView, submit, update } from './ProfileController';
+import { get, submit, update } from './ProfileController';
+import { getView } from './ProfileViewController';
 import redis from 'redis';
 import {
   create,
@@ -14,6 +15,7 @@ import {
   savePartialProfile,
 } from './ProfileService';
 import { getConnection } from './DbConnection';
+import React from 'react';
 
 const app = express();
 const router = express.Router();
@@ -28,9 +30,6 @@ const dbConnection = getConnection({
 });
 
 app.use(express.urlencoded({ extended: true }));
-router.get('^/$', getView(getPartialByAccountId(client)));
-
-router.use(express.static(path.resolve(__dirname, '..', 'view')));
 
 // Setup dependencies via partial application
 const createProfileFn = createProfile(create(dbConnection.client));
@@ -41,11 +40,18 @@ const savePartialProfileFn = savePartialProfile(
   savePartial(client),
 );
 
+router.get('^/$', getView(getPartialByAccountId(client), getProfileFn));
+router.use(express.static(path.resolve(__dirname, '..', 'view')));
+
 router.get('/profile', get(getPartialByAccountId(client), getProfileFn));
 router.post('/submit', submit(createProfileFn));
 router.post('/update', update(savePartialProfileFn));
 
 app.use(router);
+
+// load react into global for spa render
+// eslint-disable-next-line functional/immutable-data
+global.React = React;
 
 app.listen(port, () => {
   console.log(`App is running on port ${port}`);

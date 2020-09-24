@@ -17,7 +17,7 @@ export type Profile = {
   readonly surname: string;
   readonly email: string;
   readonly phone: string;
-  readonly houseNumber: number;
+  readonly houseNumber: string;
   readonly street: string;
   readonly suburb: string;
   readonly state: AustralianState;
