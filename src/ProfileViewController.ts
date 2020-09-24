@@ -1,11 +1,13 @@
 /* eslint-disable no-var */
 import { Request, Response } from 'express';
 import { GetPartialProfile, GetProfile } from './ProfileService';
-import { renderSPA, renderSsr } from './ProfileViewRenderer';
+import { RenderSpa, RenderSsr } from './ProfileViewRenderer';
 
 export const getView = (
   getPartialProfile: GetPartialProfile,
   getProfile: GetProfile,
+  renderSsr: RenderSsr,
+  renderSpa: RenderSpa,
 ) => async (request: Request, response: Response): Promise<Response> => {
   const shouldSsr = request.cookies && request.cookies['hasJs'] === 'false';
   if (shouldSsr) {
@@ -21,7 +23,7 @@ export const getView = (
       return response.send(view);
     }
   } else {
-    const spa = await renderSPA();
+    const spa = await renderSpa();
     return response.send(spa);
   }
 };

@@ -7,9 +7,11 @@ import { PartialProfile } from './Profile';
 
 const rootTemplatePath = path.resolve(__dirname, '..', 'view/index.html');
 
-const readRootTemplate = (): Promise<string> =>
+type ReadFile = typeof fs.readFile;
+
+const readRootTemplate = (readFile: ReadFile) => (): Promise<string> =>
   new Promise((resolve, reject) => {
-    fs.readFile(rootTemplatePath, 'utf-8', (error, data) => {
+    readFile(rootTemplatePath, 'utf-8', (error, data) => {
       if (error) {
         return reject(error);
       } else {
@@ -18,13 +20,13 @@ const readRootTemplate = (): Promise<string> =>
     });
   });
 
-export const renderSsr = async (
+export const renderSsr = (readFile: ReadFile) => async (
   profileProps: PartialProfile | null,
 ): Promise<string> => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const template = require('../view/main').default;
 
-  const rootTemplate = await readRootTemplate();
+  const rootTemplate = await readRootTemplate(readFile)();
   const componentTemplate = ReactDomServer.renderToString(
     React.createElement(template, profileProps),
   );
@@ -34,5 +36,11 @@ export const renderSsr = async (
   );
   return view;
 };
+export type RenderSsr = (
+  profileProps: PartialProfile | null,
+) => Promise<string>;
 
-export const renderSPA = (): Promise<string> => readRootTemplate();
+export const renderSpa = (readFile: ReadFile) => (): Promise<string> =>
+  readRootTemplate(readFile)();
+
+export type RenderSpa = () => Promise<string>;
