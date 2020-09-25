@@ -8,6 +8,10 @@ import {
 } from './ProfileService';
 import { PartialProfile, Profile } from './Profile';
 
+// Hardcoded user id here but ideally this would be retrieved by
+// the stateless auth setup like JWT's
+const userId = '2ab748b8-5b3c-4184-acb4-cb3550b8c6de';
+
 /**
  * Gets a profile or partial profile depending
  * of whether user has finished creating the
@@ -50,7 +54,7 @@ export const submit = (createProfile: CreateProfile) => async (
   const profile = request.body as Profile;
   const createdProfile = await createProfile({
     ...profile,
-    userId: '2ab748b8-5b3c-4184-acb4-cb3550b8c6de',
+    userId,
   });
   return response.send(createdProfile);
 };
@@ -66,7 +70,6 @@ export const update = (savePartialProfile: SavePartialProfile) => async (
   request: Request,
   response: Response,
 ): Promise<Response> => {
-  const userId = '2ab748b8-5b3c-4184-acb4-cb3550b8c6de';
   const partialProfile = request.body as PartialProfile;
 
   await savePartialProfile(userId, partialProfile);
