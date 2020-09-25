@@ -1,4 +1,8 @@
-import { Profile, PartialProfile } from './Profile';
+import {
+  Profile,
+  PartialProfile,
+  PartialProfileConfiguration,
+} from './Profile';
 import { IDatabase } from 'pg-promise';
 import { RedisClient } from 'redis';
 
@@ -31,18 +35,24 @@ export type GetPartialByUserId = (
   userId: string,
 ) => Promise<PartialProfile | null>;
 
-export const savePartial = (redisClient: RedisClient) => (
-  userId: string,
-  partialProfile: PartialProfile,
-): Promise<void> =>
+export const savePartial = (
+  redisClient: RedisClient,
+  config: PartialProfileConfiguration,
+) => (userId: string, partialProfile: PartialProfile): Promise<void> =>
   new Promise((resolve, reject) => {
-    redisClient.set(userId, JSON.stringify(partialProfile), error => {
-      if (error) {
-        return reject(error);
-      } else {
-        return resolve();
-      }
-    });
+    redisClient.set(
+      userId,
+      JSON.stringify(partialProfile),
+      'EX',
+      config.ttl,
+      error => {
+        if (error) {
+          return reject(error);
+        } else {
+          return resolve();
+        }
+      },
+    );
   });
 
 export type SavePartial = (

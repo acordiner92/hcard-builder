@@ -31,6 +31,13 @@ const dbConnection = getConnection({
   port: 5432,
 });
 
+const partialProfileConfiguration = {
+  // we want to store the form values for 1 day maximum since
+  // we want to balance how much is stored in redis vs how long we should keep it saved
+  // for the user
+  ttl: 86400000, // 1 day
+};
+
 app.use(express.urlencoded({ extended: true }));
 
 // Setup dependencies via partial application
@@ -39,7 +46,7 @@ const getProfileFn = getProfile(getByUserId(dbConnection.client));
 
 const savePartialProfileFn = savePartialProfile(
   getPartialByUserId(client),
-  savePartial(client),
+  savePartial(client, partialProfileConfiguration),
 );
 
 router.get(

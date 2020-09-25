@@ -37,3 +37,7 @@ export type PartialProfile = {
   readonly postcode?: string;
   readonly country?: string;
 };
+
+export type PartialProfileConfiguration = {
+  readonly ttl: number;
+};
