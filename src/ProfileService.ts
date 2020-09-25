@@ -53,12 +53,12 @@ export type SavePartialProfile = (
  * @param {Profile} profile
  * @returns {Promise<Profile>}
  */
-export const createProfile = (create: Create) => (
+export const createProfile = (create: Create, getUuid: GetUuid) => (
   profile: Profile,
-): Promise<Profile> => create({ ...profile, id: uuid() });
+): Promise<Profile> => create({ ...profile, id: getUuid() });
 
 export type CreateProfile = (profile: Profile) => Promise<Profile>;
-
+export type GetUuid = typeof uuid;
 /**
  * Gets a profile by user id.
  *

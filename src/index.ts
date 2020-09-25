@@ -18,6 +18,7 @@ import {
 import { getConnection } from './DbConnection';
 import React from 'react';
 import { renderSpa, renderSsr } from './ProfileViewRenderer';
+import { v4 as uuid } from 'uuid';
 
 const app = express();
 const router = express.Router();
@@ -41,7 +42,7 @@ const partialProfileConfiguration = {
 app.use(express.urlencoded({ extended: true }));
 
 // Setup dependencies via partial application
-const createProfileFn = createProfile(create(dbConnection.client));
+const createProfileFn = createProfile(create(dbConnection.client), uuid);
 const getProfileFn = getProfile(getByUserId(dbConnection.client));
 
 const savePartialProfileFn = savePartialProfile(
