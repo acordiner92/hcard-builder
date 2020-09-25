@@ -27,25 +27,33 @@ const readRootTemplate = (readFile: ReadFile) => (): Promise<string> =>
  * @param {(PartialProfile | null)} profileProps
  * @returns {Promise<string>}
  */
-export const renderSsr = (readFile: ReadFile) => async (
-  profileProps: PartialProfile | null,
-): Promise<string> => {
+export const renderSsr = (profileProps: PartialProfile | null): string => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const template = require('../view/main').default;
 
-  const rootTemplate = await readRootTemplate(readFile)();
   const componentTemplate = ReactDomServer.renderToString(
     React.createElement(template, profileProps),
   );
-  const view = rootTemplate.replace(
-    '<div class="HcardApp" />',
-    `<div class="HcardApp">${componentTemplate}</div>`,
-  );
-  return view;
+  return `
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Live hCard Preview</title>
+
+      <link href="css/bootstrap.min.css" rel="stylesheet" />
+      <link href="css/main.css" rel="stylesheet" />
+    </head>
+
+    <body>
+    ${componentTemplate}
+    </body>
+  </html>
+  `;
 };
-export type RenderSsr = (
-  profileProps: PartialProfile | null,
-) => Promise<string>;
+export type RenderSsr = (profileProps: PartialProfile | null) => string;
 
 /**
  * Renders the profile view index.html.

@@ -55,7 +55,7 @@ export const initialise = (config: AppConfiguration) => {
     getView(
       getPartialByUserId(client),
       getProfileFn,
-      renderSsr(fs.readFile),
+      renderSsr,
       renderSpa(fs.readFile),
     ),
   );

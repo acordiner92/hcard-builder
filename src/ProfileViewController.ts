@@ -7,7 +7,7 @@ import { RenderSpa, RenderSsr } from './ProfileViewRenderer';
 // Ideally in a real life situation we would get a value out of
 // cookie to indicate whether the user has no js support or not.
 // https://www.codeproject.com/Tips/1217469/How-to-Detect-if-Client-has-JavaScript-Enabled-Dis
-const shouldRenderSsr = false;
+const shouldRenderSsr = true;
 
 // Hardcoded user id here but ideally this would be retrieved by
 // the stateless auth setup like JWT's
@@ -30,7 +30,7 @@ export const getView = (
   if (shouldRenderSsr) {
     const profile = await getProfile(userId);
     if (profile) {
-      const view = await renderSsr({ ...profile });
+      const view = renderSsr({ ...profile });
       return response.send(view);
     } else {
       const partialProfile = await getPartialProfile(userId);

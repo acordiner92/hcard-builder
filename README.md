@@ -18,6 +18,7 @@ A profile creation application.
 ## How to run
 
 - `npm start`
+- open the browser and go to http://localhost:8080/
 
 To simulate a SSR scenario you will need to update the shouldRenderSsr variable in ProfileViewController.ts
 By default it is turned off and SPA will be rendered.
