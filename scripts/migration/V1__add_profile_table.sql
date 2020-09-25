@@ -5,7 +5,7 @@ CREATE TABLE PROFILE(
    surname TEXT NOT NULL,
    email TEXT NOT NULL,
    phone TEXT NOT NULL,
-   house_number INT NOT NULL, 
+   house_number TEXT NOT NULL, 
    street TEXT NOT NULL,
    suburb TEXT NOT NULL,
    state TEXT NOT NULL,
