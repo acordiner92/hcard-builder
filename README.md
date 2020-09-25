@@ -2,6 +2,12 @@
 
 A profile creation application.
 
+## Things that are missing
+
+- Did not have time to add in validation but this would be required to make sure the data is sanitised before hitting the submit and update
+  controller methods.
+- Also some integration tests would be need for the ProfileViewController and ProfileViewRenderer.
+
 ## Requirements
 
 - NodeJS 14.3 or higher
