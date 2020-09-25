@@ -20,11 +20,11 @@ import React from 'react';
 import { renderSpa, renderSsr } from './ProfileViewRenderer';
 import { v4 as uuid } from 'uuid';
 
-const app = express();
+export const app = express();
 const router = express.Router();
 const port = 8080;
-const client = redis.createClient();
-const dbConnection = getConnection({
+export const client = redis.createClient();
+export const dbConnection = getConnection({
   user: 'postgres',
   host: 'localhost',
   database: 'profile_db_test',
