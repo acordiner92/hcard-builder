@@ -1,7 +1,17 @@
 import request from 'supertest';
-import { app, client as redisClient, dbConnection } from '../src';
+import { initialise } from '../src/App';
 
 describe('ProfileController', () => {
+  const { app, redisClient, dbConnection } = initialise({
+    postgres: {
+      user: 'postgres',
+      host: 'localhost',
+      database: 'profile_db_test',
+      password: 'postgres',
+      port: 5432,
+    },
+  });
+
   const flushRedis = (): Promise<void> =>
     new Promise((resolve, reject) => {
       redisClient.flushall(error => {
