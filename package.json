@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "db:migration": "docker run --rm -v $PWD/scripts/migration:/flyway/sql flyway/flyway:6 -url=jdbc:postgresql://host.docker.internal:5432/profile_db_test -user=postgres -password=postgres migrate",
+    "db:migration": "docker run --rm -v $PWD/scripts/migration:/flyway/sql flyway/flyway:6 -url=jdbc:postgresql://host.docker.internal:5432/profile_db -user=postgres -password=postgres migrate",
+    "db:migration:test": "docker run --rm -v $PWD/scripts/migration:/flyway/sql flyway/flyway:6 -url=jdbc:postgresql://host.docker.internal:5432/profile_db_test -user=postgres -password=postgres migrate",
     "start": "tsnd --cls src/index.ts",
     "build": "tsc",
     "formatting": "prettier --check ./src",
