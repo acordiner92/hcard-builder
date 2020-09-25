@@ -8,6 +8,15 @@ import {
 } from './ProfileService';
 import { PartialProfile, Profile } from './Profile';
 
+/**
+ * Gets a profile or partial profile depending
+ * of whether user has finished creating the
+ * profile or not.
+ *
+ * @param {Request} _request
+ * @param {Response} response
+ * @returns {Promise<Response>}
+ */
 export const get = (
   getPartialProfile: GetPartialProfile,
   getProfile: GetProfile,
@@ -27,6 +36,13 @@ export const get = (
   }
 };
 
+/**
+ * Creates a new profile.
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @returns {Promise<Response>}
+ */
 export const submit = (createProfile: CreateProfile) => async (
   request: Request,
   response: Response,
@@ -39,6 +55,13 @@ export const submit = (createProfile: CreateProfile) => async (
   return response.send(createdProfile);
 };
 
+/**
+ * Upserts the partial profile (saving values as user moves through form).
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @returns {Promise<Response>}
+ */
 export const update = (savePartialProfile: SavePartialProfile) => async (
   request: Request,
   response: Response,

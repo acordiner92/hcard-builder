@@ -2,7 +2,14 @@
 import { Request, Response } from 'express';
 import { GetPartialProfile, GetProfile } from './ProfileService';
 import { RenderSpa, RenderSsr } from './ProfileViewRenderer';
-
+/**
+ * Gets the profile view as SSR or SPA
+ * depending if client has JS support or not.
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @returns {Promise<Response>}
+ */
 export const getView = (
   getPartialProfile: GetPartialProfile,
   getProfile: GetProfile,

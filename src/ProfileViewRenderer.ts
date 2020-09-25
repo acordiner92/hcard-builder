@@ -20,6 +20,13 @@ const readRootTemplate = (readFile: ReadFile) => (): Promise<string> =>
     });
   });
 
+/**
+ * Renders the profile page as static html via
+ * React
+ *
+ * @param {(PartialProfile | null)} profileProps
+ * @returns {Promise<string>}
+ */
 export const renderSsr = (readFile: ReadFile) => async (
   profileProps: PartialProfile | null,
 ): Promise<string> => {
@@ -40,6 +47,11 @@ export type RenderSsr = (
   profileProps: PartialProfile | null,
 ) => Promise<string>;
 
+/**
+ * Renders the profile view index.html.
+ *
+ * @returns {Promise<string>}
+ */
 export const renderSpa = (readFile: ReadFile) => (): Promise<string> =>
   readRootTemplate(readFile)();
 

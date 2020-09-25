@@ -13,6 +13,12 @@ const pgOptions: IInitOptions = {
   },
 };
 
+/**
+ * This method is used to map underscore variables in Postgres
+ * to javascript camel-case variables using pg-promise library.
+ *
+ * @param {*} data
+ */
 const camelizeColumns = (data: any): void => {
   const template = data[0];
   for (const prop in template) {
