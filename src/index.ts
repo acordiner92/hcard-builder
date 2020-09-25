@@ -1,5 +1,5 @@
 import React from 'react';
-import { initialise } from './app';
+import { initialise } from './App';
 
 // load react into global for spa render
 // eslint-disable-next-line functional/immutable-data
